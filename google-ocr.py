@@ -2,13 +2,16 @@ import glob
 import os
 
 
+types = ['*.jpg','*.png','*.pdf']
 files = []
-for filename in glob.glob('*.jpg'):
-        files.append(filename)
 
-for image in sorted(files):
-	print "uploading " + image
-	command = "gdput.py -t ocr  " + image + " > result.log"
+for type_ in types:
+	for filename in glob.glob(type_):
+	        files.append(filename)
+
+for file in sorted(files):
+	print "uploading " + file
+	command = "gdput.py -t ocr " + file + " > result.log"
 	print "running " + command
 	os.system(command)
 	
@@ -17,7 +20,7 @@ for image in sorted(files):
 	for line in resultfile:
 		if "id:" in line:
 			fileid = line.split(":")[1].strip()
-			filename = image.split(".")[0] + ".txt"
+			filename = file.split(".")[0] + ".txt"
 			get_command = "gdget.py -f txt -s " + filename + " " + fileid
 			print "running "+ get_command
 			os.system(get_command)
